@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Filiere;
-use App\Models\Memoire;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -11,10 +10,6 @@ use Illuminate\View\View;
 
 class AdminController extends Controller
 {
-    private const STATUTS = ['en_attente', 'valide', 'rejete'];
-
-    // ---------- Filières ----------
-
     public function index(): View
     {
         $filieres = Filiere::orderBy('nom')->get();
@@ -70,43 +65,5 @@ class AdminController extends Controller
 
         return redirect()->route('admin.filieres.index')
             ->with('success', 'Filière supprimée.');
-    }
-
-    // ---------- Validation des mémoires ----------
-
-    public function memoires(Request $request): View
-    {
-        $statut = in_array($request->query('statut'), self::STATUTS, true)
-            ? $request->query('statut')
-            : 'en_attente';
-
-        $memoires = Memoire::with('filiere')
-            ->where('statut', $statut)
-            ->latest()
-            ->paginate(15)
-            ->withQueryString();
-
-        return view('admin.memoires.liste', compact('memoires', 'statut'));
-    }
-
-    public function validerMemoire(Memoire $memoire): RedirectResponse
-    {
-        return $this->changerStatut($memoire, 'valide', 'Mémoire validé.');
-    }
-
-    public function rejeterMemoire(Memoire $memoire): RedirectResponse
-    {
-        return $this->changerStatut($memoire, 'rejete', 'Mémoire rejeté.');
-    }
-
-    private function changerStatut(Memoire $memoire, string $statut, string $message): RedirectResponse
-    {
-        if ($memoire->statut !== 'en_attente') {
-            return back()->with('error', 'Ce mémoire a déjà été traité.');
-        }
-
-        $memoire->update(['statut' => $statut]);
-
-        return back()->with('success', $message);
     }
 }
