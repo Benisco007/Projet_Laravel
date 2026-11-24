@@ -19,12 +19,12 @@ class AdminController extends Controller
     {
         $filieres = Filiere::orderBy('nom')->get();
 
-        return view('admin.filieres.index', compact('filieres'));
+        return view('admin.filieres.liste', compact('filieres'));
     }
 
     public function create(): View
     {
-        return view('admin.filieres.create');
+        return view('admin.filieres.creer');
     }
 
     public function store(Request $request): RedirectResponse
@@ -43,7 +43,7 @@ class AdminController extends Controller
 
     public function edit(Filiere $filiere): View
     {
-        return view('admin.filieres.edit', compact('filiere'));
+        return view('admin.filieres.modifier', compact('filiere'));
     }
 
     public function update(Request $request, Filiere $filiere): RedirectResponse
@@ -86,7 +86,7 @@ class AdminController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.memoires.index', compact('memoires', 'statut'));
+        return view('admin.memoires.liste', compact('memoires', 'statut'));
     }
 
     public function validerMemoire(Memoire $memoire): RedirectResponse
