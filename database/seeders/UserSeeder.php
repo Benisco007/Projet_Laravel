@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
             ['name' => 'Prof Encadreur',  'email' => 'encadreur@eneam.bj',  'role' => 'encadreur',  'matricule' => null],
             ['name' => 'Mme Validatrice', 'email' => 'validateur@eneam.bj', 'role' => 'validateur', 'matricule' => null],
             ['name' => 'Lecteur Test',    'email' => 'lecteur@eneam.bj',    'role' => 'lecteur',     'matricule' => null],
+            ['name' => 'Visiteur Externe', 'email' => 'externe@gmail.com', 'role' => 'externe', 'matricule' => null],
         ];
 
         foreach ($users as $userData) {

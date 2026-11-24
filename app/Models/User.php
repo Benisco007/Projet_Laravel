@@ -30,7 +30,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+    public function isExterne(): bool
+    {
+        return $this->role === 'externe';
+    }
     // Relations
     public function memoires()
     {

@@ -26,4 +26,10 @@ class MemoirePolicy
     {
         return $user->isValidateur() || $user->isAdmin();
     }
+    // Un externe ne peut voir que les 4 premières pages (géré côté vue)
+    public function viewPreview(User $user, Memoire $memoire): bool
+    {
+        return $memoire->statut === 'valide'
+            && ($memoire->embargo_date === null || $memoire->embargo_date->isPast());
+    }
 }

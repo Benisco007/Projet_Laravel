@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('matricule')->nullable()->unique();
-            $table->enum('role', ['etudiant', 'encadreur', 'validateur', 'admin', 'lecteur'])->default('lecteur');
+            $table->enum('role', ['etudiant', 'encadreur', 'validateur', 'admin', 'lecteur', 'externe'])->default('externe');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
