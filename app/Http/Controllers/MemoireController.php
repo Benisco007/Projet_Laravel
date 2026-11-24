@@ -57,7 +57,6 @@ class MemoireController extends Controller
         ]);
 
         app(PlagiatService::class)->analyser($memoire);
-
         return redirect()->route('etudiant.dashboard')
             ->with('success', 'Mémoire déposé avec succès !');
     }

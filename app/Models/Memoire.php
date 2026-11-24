@@ -32,8 +32,8 @@ class Memoire extends Model
 
     protected $casts = [
         'telechargement_autorise' => 'boolean',
-        'embargo_date'            => 'date',
-        'score_similarite'        => 'decimal:2',
+        'embargo_date' => 'date',
+        'score_similarite' => 'decimal:2',
     ];
 
     public function scopeValides(Builder $query): Builder
