@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('embargo_date')->nullable();
             $table->foreignId('etudiant_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('encadreur_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('filiere_id')->nullable()->constrained('filieres')->onDelete('set null');
+            $table->unsignedBigInteger('filiere_id')->nullable();
             $table->timestamps();
         });
     }
