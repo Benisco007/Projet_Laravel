@@ -2,31 +2,73 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    protected $fillable = [
+        'name',
+        'email',
+        'matricule',
+        'role',
+        'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function isExterne(): bool
+    {
+        return $this->role === 'externe';
+    }
+    // Relations
+    public function memoires()
+    {
+        return $this->hasMany(Memoire::class, 'etudiant_id');
+    }
+
+    public function memoiresEncadres()
+    {
+        return $this->hasMany(Memoire::class, 'encadreur_id');
+    }
+
+    public function validations()
+    {
+        return $this->hasMany(\App\Models\Validation::class, 'validateur_id');
+    }
+
+    // Helpers de rôle
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+    public function isEtudiant(): bool
+    {
+        return $this->role === 'etudiant';
+    }
+    public function isValidateur(): bool
+    {
+        return $this->role === 'validateur';
+    }
+    public function isEncadreur(): bool
+    {
+        return $this->role === 'encadreur';
+    }
+    public function isLecteur(): bool
+    {
+        return $this->role === 'lecteur';
     }
 }
