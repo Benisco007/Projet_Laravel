@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DemandeAchat;
 use App\Models\Filiere;
 use App\Models\Memoire;
 use Illuminate\Http\RedirectResponse;
@@ -18,7 +19,6 @@ class AdminController extends Controller
     public function index(): View
     {
         $filieres = Filiere::orderBy('nom')->get();
-
         return view('admin.filieres.index', compact('filieres'));
     }
 
@@ -29,13 +29,12 @@ class AdminController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate([
-            'nom' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:20', 'unique:filieres,code'],
-            'description' => ['nullable', 'string'],
+        $request->validate([
+            'nom'  => ['required', 'string', 'max:255', Rule::unique('filieres')],
+            'code' => ['required', 'string', 'max:10', Rule::unique('filieres')],
         ]);
 
-        Filiere::create($data);
+        Filiere::create($request->only('nom', 'code'));
 
         return redirect()->route('admin.filieres.index')
             ->with('success', 'Filière créée.');
@@ -48,13 +47,12 @@ class AdminController extends Controller
 
     public function update(Request $request, Filiere $filiere): RedirectResponse
     {
-        $data = $request->validate([
-            'nom' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', 'max:20', Rule::unique('filieres', 'code')->ignore($filiere->id)],
-            'description' => ['nullable', 'string'],
+        $request->validate([
+            'nom'  => ['required', 'string', 'max:255', Rule::unique('filieres')->ignore($filiere)],
+            'code' => ['required', 'string', 'max:10',  Rule::unique('filieres')->ignore($filiere)],
         ]);
 
-        $filiere->update($data);
+        $filiere->update($request->only('nom', 'code'));
 
         return redirect()->route('admin.filieres.index')
             ->with('success', 'Filière modifiée.');
@@ -62,17 +60,13 @@ class AdminController extends Controller
 
     public function destroy(Filiere $filiere): RedirectResponse
     {
-        if ($filiere->memoires()->exists()) {
-            return back()->with('error', 'Cette filière contient des mémoires, suppression impossible.');
-        }
-
         $filiere->delete();
 
         return redirect()->route('admin.filieres.index')
             ->with('success', 'Filière supprimée.');
     }
 
-    // ---------- Validation des mémoires ----------
+    // ---------- Validation des mémoires (Mindy) ----------
 
     public function memoires(Request $request): View
     {
@@ -108,5 +102,24 @@ class AdminController extends Controller
         $memoire->update(['statut' => $statut]);
 
         return back()->with('success', $message);
+    }
+
+    // ---------- Demandes d'achat (Emma) ----------
+
+    public function demandes(): View
+    {
+        $demandes = DemandeAchat::with(['user', 'memoire'])
+            ->orderBy('statut')
+            ->latest()
+            ->paginate(15);
+
+        return view('admin.demandes.liste', compact('demandes'));
+    }
+
+    public function traiterDemande(DemandeAchat $demande): RedirectResponse
+    {
+        $demande->update(['statut' => 'traitee']);
+
+        return back()->with('success', 'Demande marquée comme traitée.');
     }
 }
