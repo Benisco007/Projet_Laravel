@@ -2,10 +2,16 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold text-gray-800">Filières</h2>
-            <a href="{{ route('admin.filieres.create') }}"
-                class="rounded-md bg-gray-800 px-4 py-2 text-sm text-white hover:bg-gray-700">
-                Nouvelle filière
-            </a>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('admin.demandes.index') }}"
+                    class="rounded-md bg-white px-4 py-2 text-sm text-gray-700 shadow hover:bg-gray-50">
+                    Demandes d'obtention
+                </a>
+                <a href="{{ route('admin.filieres.create') }}"
+                    class="rounded-md bg-gray-800 px-4 py-2 text-sm text-white hover:bg-gray-700">
+                    Nouvelle filière
+                </a>
+            </div>
         </div>
     </x-slot>
 

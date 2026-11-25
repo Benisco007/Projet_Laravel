@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DemandeAchat;
 use App\Models\Filiere;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,6 +11,8 @@ use Illuminate\View\View;
 
 class AdminController extends Controller
 {
+    // ---------- Filières ----------
+
     public function index(): View
     {
         $filieres = Filiere::orderBy('nom')->get();
@@ -65,5 +68,24 @@ class AdminController extends Controller
 
         return redirect()->route('admin.filieres.index')
             ->with('success', 'Filière supprimée.');
+    }
+
+    // ---------- Demandes d'obtention des mémoires (bibliothèque) ----------
+
+    public function demandes(): View
+    {
+        $demandes = DemandeAchat::with(['user', 'memoire'])
+            ->orderBy('statut')   // "nouvelle" avant "traitee"
+            ->latest()
+            ->paginate(15);
+
+        return view('admin.demandes.liste', compact('demandes'));
+    }
+
+    public function traiterDemande(DemandeAchat $demande): RedirectResponse
+    {
+        $demande->update(['statut' => 'traitee']);
+
+        return back()->with('success', 'Demande marquée comme traitée.');
     }
 }
