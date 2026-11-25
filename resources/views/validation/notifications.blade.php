@@ -1,10 +1,5 @@
-@extends('layouts.app')
-
-@push('styles')
+<x-app-layout>
     @vite('resources/css/validation.css')
-@endpush
-
-@section('content')
 <div class="validation-page">
     <h1 class="validation-titre">
         Mes notifications
@@ -47,4 +42,4 @@
 
     {{ $notifications->links() }}
 </div>
-@endsection
+</x-app-layout>

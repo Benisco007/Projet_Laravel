@@ -1,10 +1,5 @@
-@extends('layouts.app')
-
-@push('styles')
+<x-app-layout>
     @vite('resources/css/validation.css')
-@endpush
-
-@section('content')
 <div class="validation-page">
     <a class="validation-lien" href="{{ route('validation.index') }}">&larr; Retour à la liste</a>
 
@@ -121,4 +116,4 @@
         </ul>
     </section>
 </div>
-@endsection
+</x-app-layout>
